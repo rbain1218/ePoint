@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+/* ===== Card Styling ===== */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.05);
+}
+
+/* ===== List Group Styling ===== */
+.list-group-item {
+  font-size: 0.95rem;
+}
+.list-group-item strong {
+  font-weight: 600;
+}
+.list-group-item span {
+  display: flex;
+  align-items: center;
+}
+.list-group-item i {
+  margin-right: 0.25rem;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  border-radius: 0.4rem;
+  font-weight: 500;
+}
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  color: #fff;
+}
+.btn-primary:hover {
+  background-color: #0069d9;
+}
+
+/* ===== Alerts & Notes ===== */
+.text-muted {
+  font-size: 0.9rem;
+}
+</style>
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-primary bg-gradient text-white">
+        <h4 class="mb-0 fw-semibold">
+          <i class="fas fa-shopping-bag me-2"></i> Checkout
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <p class="mb-3 text-muted">
+            <i class="fas fa-info-circle me-1"></i> This is a dummy payment. Click 
+            <strong>Pay Now</strong> to confirm your order.
+          </p>
+
+          <ul class="list-group mb-4 shadow-sm rounded">
+            {% for item in cart %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                  <i class="fas fa-box text-secondary"></i> {{ item.title }}
+                  <small class="text-muted ms-2">× {{ item.quantity }}</small>
+                </span>
+                <strong>₹{{ item.subtotal }}</strong>
+              </li>
+            {% endfor %}
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+              <span class="fw-bold">
+                <i class="fas fa-receipt me-1"></i> Total
+              </span>
+              <strong class="text-success">₹{{ total }}</strong>
+            </li>
+          </ul>
+
+          <button type="submit" class="btn btn-primary w-100 fw-semibold">
+            <i class="fas fa-credit-card me-2"></i> Pay Now
+          </button>
+        </form>
+
+        <div class="text-center mt-4">
+          <a href="{% url 'orders:cart' %}" class="text-decoration-none small text-muted">
+            <i class="fas fa-arrow-left me-1"></i> Back to Cart
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

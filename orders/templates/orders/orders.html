@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+/* ===== Card Styling ===== */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.05);
+}
+
+/* ===== Order Item Styling ===== */
+.order-card {
+  transition: background-color 0.2s ease-in-out;
+}
+.order-card:hover {
+  background-color: #f8f9fa;
+}
+.order-header h5 {
+  font-size: 1rem;
+}
+.order-header .badge {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.4rem;
+}
+
+/* ===== List Group Styling ===== */
+.list-group-item {
+  font-size: 0.95rem;
+}
+.list-group-item strong {
+  font-weight: 600;
+}
+.list-group-item span {
+  display: flex;
+  align-items: center;
+}
+.list-group-item i {
+  margin-right: 0.25rem;
+}
+
+/* ===== Empty State ===== */
+.alert-info {
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+}
+</style>
+
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-header bg-dark bg-gradient text-white">
+        <h4 class="mb-0 fw-semibold">
+          <i class="fas fa-box me-2"></i> Your Orders
+        </h4>
+      </div>
+      <div class="card-body">
+        {% for order in orders %}
+          <div class="card mb-3 border-0 border-bottom order-card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2 order-header">
+                <h5 class="mb-0">
+                  <span class="fw-bold">
+                    <i class="fas fa-receipt me-1"></i> Order #{{ order.id }}
+                  </span>  
+                  <span class="text-muted">— ₹{{ order.total_amount }}</span>
+                </h5>
+                <span class="badge 
+                  {% if order.status == 'success' %} bg-success 
+                  {% elif order.status == 'pending' %} bg-warning 
+                  {% else %} bg-secondary {% endif %}">
+                  <i class="fas fa-circle me-1"></i> {{ order.status|title }}
+                </span>
+              </div>
+              <ul class="list-group list-group-flush mb-2">
+                {% for item in order.items.all %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                      <i class="fas fa-box-open me-1 text-secondary"></i> {{ item.product.title }}
+                      <small class="text-muted">× {{ item.quantity }}</small>
+                    </span>
+                    <strong>₹{{ item.price }}</strong>
+                  </li>
+                {% endfor %}
+              </ul>
+              <small class="text-muted">
+                <i class="fas fa-clock me-1"></i> Placed on {{ order.created_at }}
+              </small>
+            </div>
+          </div>
+        {% empty %}
+          <div class="alert alert-info text-center mb-0">
+            <i class="fas fa-shopping-bag me-1"></i> No orders yet.
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

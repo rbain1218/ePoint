@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+/* ===== Card Styling ===== */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.05);
+}
+
+/* ===== Labels & Inputs ===== */
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: block;
+  color: #495057;
+}
+.form-control {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.4rem;
+  font-size: 1rem;
+}
+.form-control:focus {
+  border-color: #28a745;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(40,167,69,0.25);
+}
+
+/* ===== Buttons ===== */
+.btn {
+  border-radius: 0.4rem;
+  font-weight: 500;
+}
+.btn-success {
+  background-color: #28a745;
+  border: none;
+  color: #fff;
+}
+.btn-success:hover {
+  background-color: #218838;
+}
+.btn-outline-success {
+  border-color: #28a745;
+  color: #28a745;
+}
+.btn-outline-success:hover {
+  background-color: #e6f9ee;
+  color: #1e7e34;
+}
+</style>
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-success bg-gradient text-white">
+        <h4 class="mb-0 fw-semibold">
+          <i class="fas fa-envelope-open-text me-2"></i> Verify Email
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <div class="text-danger small mt-1">{{ field.errors }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-success w-100 fw-semibold">
+            <i class="fas fa-check-circle me-1"></i> Verify
+          </button>
+        </form>
+        <div class="text-center mt-4">
+          <p class="small text-muted mb-1">Already verified?</p>
+          <a href="{% url 'accounts:login' %}" class="btn btn-outline-success btn-sm">
+            <i class="fas fa-sign-in-alt me-1"></i> Login
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

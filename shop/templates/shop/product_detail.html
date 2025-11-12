@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+/* ===== Card Styling ===== */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.05);
+}
+
+/* ===== Product Image ===== */
+.card img {
+  object-fit: cover;
+  height: 100%;
+  border-top-left-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem;
+}
+
+/* ===== Typography ===== */
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.lead {
+  font-size: 1.2rem;
+}
+.text-success {
+  color: #28a745 !important;
+}
+
+/* ===== Stock Badge ===== */
+.badge {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  border-radius: 0.4rem;
+  font-weight: 500;
+}
+.btn-success {
+  background-color: #28a745;
+  border: none;
+  color: #fff;
+}
+.btn-success:hover {
+  background-color: #218838;
+}
+.btn-outline-primary {
+  border-color: #007bff;
+  color: #007bff;
+}
+.btn-outline-primary:hover {
+  background-color: #e6f0ff;
+  color: #005bb5;
+}
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  color: #fff;
+}
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* ===== Suggested Products ===== */
+.card .card-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.card .card-body p {
+  font-size: 0.9rem;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 1rem 2rem rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+</style>
+
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="card shadow-sm border-0">
+      <div class="row g-0">
+        <!-- Product Image -->
+        <div class="col-md-6">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="{{ product.title }}">
+          {% else %}
+            <img src="{% static 'images/placeholder.png' %}" class="img-fluid rounded-start" alt="No image">
+          {% endif %}
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-md-6">
+          <div class="card-body">
+            <h2 class="card-title fw-bold mb-3">{{ product.title }}</h2>
+            <p class="lead text-success mb-2">
+              <i class="fas fa-tag me-1"></i> ₹{{ product.price }}
+            </p>
+            <p class="text-muted">{{ product.description }}</p>
+
+            <!-- Stock Badge -->
+            <span class="badge 
+              {% if product.stock > 10 %} bg-success 
+              {% elif product.stock > 0 %} bg-warning 
+              {% else %} bg-danger {% endif %}">
+              {% if product.stock > 0 %} In Stock: {{ product.stock }} {% else %} Out of Stock {% endif %}
+            </span>
+
+            <hr>
+
+            <!-- Action Buttons -->
+            <div class="d-flex flex-column gap-2 mt-3">
+              <a href="{% url 'orders:buy_now' product.id %}" class="btn btn-success fw-semibold">
+                <i class="fas fa-shopping-bag me-1"></i> Buy Now
+              </a>
+              <a href="{% url 'shop:add_to_cart' product.id %}" class="btn btn-outline-primary fw-semibold">
+                <i class="fas fa-cart-plus me-1"></i> Add to Cart
+              </a>
+              <a href="{% url 'messaging:message_to_seller' product.id %}" class="btn btn-secondary fw-semibold">
+                <i class="fas fa-envelope me-1"></i> Message Seller
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suggested Products Section -->
+    <div class="mt-5">
+      <h4 class="fw-semibold mb-3">
+        <i class="fas fa-lightbulb me-1 text-primary"></i> You may also like
+      </h4>
+      <div class="row g-4">
+        {% for suggestion in suggestions %}
+          <div class="col-md-3 col-sm-6">
+            <div class="card h-100 shadow-sm border-0">
+              {% if suggestion.image %}
+                <img src="{{ suggestion.image.url }}" class="card-img-top" alt="{{ suggestion.title }}">
+              {% else %}
+                <img src="{% static 'images/placeholder.png' %}" class="card-img-top" alt="No image">
+              {% endif %}
+              <div class="card-body d-flex flex-column">
+                <h6 class="card-title text-truncate">{{ suggestion.title }}</h6>
+                <p class="text-success fw-semibold mb-2">₹{{ suggestion.price }}</p>
+                <a href="{% url 'shop:product_detail' suggestion.id %}" 
+                   class="btn btn-outline-primary btn-sm mt-auto w-100">
+                  <i class="fas fa-eye me-1"></i> View
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
