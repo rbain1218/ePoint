@@ -72,10 +72,3 @@ LOGIN_REDIRECT_URL = 'shop:home'
 LOGOUT_REDIRECT_URL = 'shop:home'
 
 # Email (console for dev; replace with SMTP in production)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'rbain1218@gmail.com'       # Your Gmail address
-EMAIL_HOST_PASSWORD = 'qrio eyap sngx jecw'    # App password (recommended)
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
